@@ -11,6 +11,7 @@ export default function App() {
   const [showMusicPlayer, setShowMusicPlayer] = useState(false);
   const [recipientName, setRecipientName] = useState('Dayibeth');
   const [isEditingName, setIsEditingName] = useState(false);
+  const [isCardModalOpen, setIsCardModalOpen] = useState(false);
 
   // Fallbacks in case external images fail to load
   const [bowError, setBowError] = useState(false);
@@ -24,6 +25,10 @@ export default function App() {
 
     const handlePopState = (event: PopStateEvent) => {
       const state = event.state;
+      if (isCardModalOpen) {
+        setIsCardModalOpen(false);
+        return;
+      }
       if (!state || state.appScreen === 'cover') {
         setShowGarden(false);
         setShowMusicPlayer(false);
@@ -46,13 +51,16 @@ export default function App() {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, []);
+  }, [isCardModalOpen]);
 
   // Keyboard navigation for Android physical keyboards / Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' || e.key === 'Backspace') {
-        if (showMusicPlayer) {
+        if (isCardModalOpen) {
+          e.preventDefault();
+          setIsCardModalOpen(false);
+        } else if (showMusicPlayer) {
           e.preventDefault();
           window.history.back();
         } else if (showGarden) {
@@ -69,7 +77,7 @@ export default function App() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [showMusicPlayer, showGarden, hasEntered]);
+  }, [isCardModalOpen, showMusicPlayer, showGarden, hasEntered]);
 
   const handleEnterFromCover = () => {
     window.history.pushState({ appScreen: 'letter' }, '');
@@ -155,7 +163,7 @@ export default function App() {
           ← Portada
         </button>
 
-        <div className="inline-flex items-center gap-2 bg-white/80 hover:bg-white/95 transition-all border border-rose-200 px-4 py-1.5 rounded-full shadow-sm backdrop-blur-md">
+        <div className="inline-flex items-center gap-2 bg-white/80 hover:bg-white/95 transition-all border border-amber-200 px-4 py-1.5 rounded-full shadow-sm backdrop-blur-md">
           <span className="text-amber-500 text-sm">🌻</span>
           {isEditingName ? (
             <input
@@ -167,19 +175,19 @@ export default function App() {
                 if (e.key === 'Enter') setIsEditingName(false);
               }}
               autoFocus
-              className="bg-transparent border-b border-rose-400 text-xs font-semibold text-rose-950 outline-none text-center w-24"
+              className="bg-transparent border-b border-amber-400 text-xs font-semibold text-amber-950 outline-none text-center w-24"
             />
           ) : (
             <span
               onClick={() => setIsEditingName(true)}
-              className="text-xs font-semibold text-rose-900 cursor-pointer hover:underline"
+              className="text-xs font-semibold text-amber-950 cursor-pointer hover:underline"
               title="Haz clic para cambiar el nombre"
             >
               Para: {recipientName} ✎
             </span>
           )}
-          <span className="text-[11px] text-rose-900/60 font-medium border-l border-rose-200 pl-2">
-            Hoy no es ninguna fecha especial
+          <span className="text-[11px] text-amber-900/80 font-medium border-l border-amber-200 pl-2">
+            Tus flores amarillas ✨
           </span>
         </div>
 
@@ -200,7 +208,7 @@ export default function App() {
       {/* Interactive Envelope Container */}
       <div
         id="valentines-container"
-        className="container valentines-container mt-20 sm:mt-24 mb-0"
+        className="container valentines-container mt-24 sm:mt-28 mb-0"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={toggleCard}
@@ -278,36 +286,74 @@ export default function App() {
             id="valentine-card"
             className={`card ${cardIsUp ? 'open' : ''}`}
             style={{
-              top: cardIsUp ? '-55px' : '5px',
+              top: cardIsUp ? '-140px' : '5px',
+              height: cardIsUp ? '228px' : '185px',
             }}
           >
-            {/* Thoughtful Text: spontaneous, real & sincere */}
-            <div id="card-message" className="text">
-              <span className="block text-[21px] text-[#2b0e07] leading-tight font-bold">
-                Hoy es un día común y corriente...
-              </span>
-              <span className="block text-[17px] text-[#5a2a18] mt-1 font-semibold leading-tight">
-                pero quería darte un detalle bonito.
-              </span>
-              <span className="block text-[15px] sm:text-[16px] text-[#9b2226] mt-1.5 font-bold leading-tight">
-                No te pregunté si tenías flores favoritas, pero quise regalarte estos girasoles 🌻
-              </span>
-            </div>
+            <div className="card-inner">
+              {/* Header: recipient dedication */}
+              <div className="flex items-center justify-center gap-1 text-[11px] font-bold text-amber-900 tracking-wider uppercase pt-0.5">
+                <span className="text-xs">🌻</span>
+                <span>Para ti, {recipientName}</span>
+                <span className="text-xs">💛</span>
+              </div>
 
-            {/* Sunflower button inside the card that opens the night garden */}
-            <div id="card-sunflower-trigger" className="heart">
-              <button
+              {/* Thoughtful Text: Flores amarillas acknowledging the date */}
+              <div
+                id="card-message"
+                className="text py-0.5 px-0.5 cursor-pointer w-full"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setShowGarden(true);
+                  setIsCardModalOpen(true);
                 }}
-                className="group relative flex items-center justify-center p-1 rounded-full hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none"
-                title="Ver tu sorpresa"
+                title="Haz clic para leer en pantalla completa"
               >
-                <span className="text-2xl group-hover:rotate-12 transition-transform duration-300">
-                  🌻
-                </span>
-              </button>
+                <p
+                  className="m-0 text-[#2b0e07] leading-tight font-bold"
+                  style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '15.5px' }}
+                >
+                  Sé que ya pasó la fecha de las flores amarillas...
+                </p>
+                <p
+                  className="m-0 text-[#5a2a18] leading-tight font-semibold mt-1"
+                  style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '14px' }}
+                >
+                  pero no quería quedarme sin darte este detalle.
+                </p>
+                <p
+                  className="m-0 text-[#b45309] leading-tight font-bold mt-1"
+                  style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '14px' }}
+                >
+                  Aquí tienes tus flores amarillas, con mucho cariño 🌻💛
+                </p>
+              </div>
+
+              {/* Action buttons inside the card */}
+              <div className="w-full flex items-center justify-center gap-2 pb-0.5">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowGarden(true);
+                  }}
+                  className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-[11px] font-bold shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                  title="Ver jardín floreciendo"
+                >
+                  <span>🌻</span>
+                  <span>Ver jardín</span>
+                </button>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsCardModalOpen(true);
+                  }}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/95 hover:bg-white text-rose-950 text-[11px] font-semibold border border-rose-200/80 shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                  title="Ampliar carta completa"
+                >
+                  <span>📜</span>
+                  <span>Ampliar</span>
+                </button>
+              </div>
             </div>
 
             {/* Floating Red/Crimson Hearts */}
@@ -325,18 +371,99 @@ export default function App() {
         <div id="envelope-shadow" className="shadow"></div>
       </div>
 
+      {/* Expanded Letter Modal for comfortable reading */}
+      {isCardModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 backdrop-blur-sm p-4 animate-fade-in"
+          onClick={() => setIsCardModalOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-md bg-[#fdfbf7] rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-amber-300/80 flex flex-col items-center text-center animate-scale-up"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundImage: 'radial-gradient(circle at top right, rgba(251, 191, 36, 0.12), transparent 70%)',
+            }}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setIsCardModalOpen(false)}
+              className="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-950 flex items-center justify-center text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-sm"
+              aria-label="Cerrar cartita"
+            >
+              ✕
+            </button>
+
+            {/* Decorative Top Stamp */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-100/90 border border-amber-300 text-amber-950 text-xs font-semibold mb-4 shadow-xs">
+              <span>🌻</span>
+              <span>Para {recipientName}</span>
+              <span>💛</span>
+            </div>
+
+            {/* Title */}
+            <h3
+              className="text-2xl sm:text-3xl font-bold text-amber-950 mb-3"
+              style={{ fontFamily: "'Caveat', cursive, sans-serif" }}
+            >
+              Tus Flores Amarillas 🌻
+            </h3>
+
+            {/* Letter Content */}
+            <div
+              className="space-y-3.5 text-stone-800 leading-relaxed max-w-sm px-2"
+              style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '22px' }}
+            >
+              <p className="font-bold text-[#2b0e07]">
+                Sé que ya pasó la fecha tradicional de las flores amarillas...
+              </p>
+              <p className="text-[#5a2a18] font-medium">
+                pero no me iba a quedar con las ganas de darte este lindo detalle.
+              </p>
+              <p className="font-bold text-[#b45309]">
+                Aquí tienes tus flores amarillas, con mucho cariño. Ningún día es tarde cuando el detalle viene del corazón. 🌻💛
+              </p>
+            </div>
+
+            {/* Action buttons inside expanded card */}
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3 w-full">
+              <button
+                onClick={() => {
+                  setIsCardModalOpen(false);
+                  setShowGarden(true);
+                }}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-sm font-bold shadow-md hover:scale-105 active:scale-95 transition-all"
+              >
+                <span>🌻</span>
+                <span>Ver flores floreciendo</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsCardModalOpen(false);
+                  handleToggleMusic();
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-stone-50 border border-stone-200 text-stone-800 text-sm font-semibold shadow-xs hover:scale-105 active:scale-95 transition-all"
+              >
+                <span>🎵</span>
+                <span>{showMusicPlayer ? 'Ocultar música' : 'Poner música'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Action Buttons Below the Envelope */}
-      <div className="mt-2 sm:mt-3 mb-6 flex flex-col items-center gap-2.5 z-10 px-4 text-center">
+      <div className="mt-3 sm:mt-4 mb-6 flex flex-col items-center gap-2.5 z-10 px-4 text-center">
         <div className="flex flex-wrap items-center justify-center gap-3">
           <button
             onClick={handleOpenGarden}
             id="see-sunflowers-btn"
-            className="group relative inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-gradient-to-r from-[#9b2226] via-[#780000] to-[#500000] hover:from-[#ba181b] hover:to-[#660708] text-amber-100 text-sm font-semibold tracking-wide shadow-[0_4px_20px_rgba(155,34,38,0.45)] hover:shadow-[0_6px_25px_rgba(200,29,37,0.6)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 border border-red-500/30"
+            className="group relative inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-gradient-to-r from-[#b45309] via-[#92400e] to-[#78350f] hover:from-[#d97706] hover:to-[#92400e] text-amber-50 text-sm font-semibold tracking-wide shadow-[0_4px_20px_rgba(180,83,9,0.45)] hover:shadow-[0_6px_25px_rgba(217,119,6,0.6)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 border border-amber-400/30"
           >
             <span className="text-base group-hover:rotate-45 transition-transform duration-500">
               🌻
             </span>
-            <span>Ver girasoles floreciendo para ti</span>
+            <span>Ver tus flores amarillas floreciendo</span>
           </button>
 
           <button
@@ -355,8 +482,8 @@ export default function App() {
           onClick={toggleCard}
         >
           {cardIsUp
-            ? '♡ Haz clic para guardar la cartita ♡'
-            : '♡ Pasa el cursor o haz clic en el sobre para leerlo ♡'}
+            ? '♡ Haz clic en la carta para ampliarla o guardarla ♡'
+            : '♡ Pasa el cursor o toca el sobre para abrir la cartita ♡'}
         </p>
       </div>
     </div>

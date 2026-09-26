@@ -99,19 +99,19 @@ export const SunflowerGarden: React.FC<SunflowerGardenProps> = ({ onBack, recipi
       {/* Sweet poetic message overlay at the top */}
       <div
         id="sunflower-dedication"
-        className="relative z-30 pt-8 sm:pt-12 px-6 text-center max-w-xl mx-auto flex flex-col items-center animate-fade-in"
+        className="relative z-30 pt-6 sm:pt-10 px-4 sm:px-6 text-center max-w-xl mx-auto flex flex-col items-center animate-fade-in"
       >
-        <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs sm:text-sm font-medium tracking-wide bg-amber-500/20 text-amber-200 border border-amber-400/30 backdrop-blur-md mb-3 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
-          🌻 Un detalle en un día cualquiera
+        <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs sm:text-sm font-medium tracking-wide bg-amber-500/25 text-amber-200 border border-amber-400/40 backdrop-blur-md mb-2 sm:mb-3 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+          🌻 Tus Flores Amarillas
         </span>
         <h1
           className="text-white text-2xl sm:text-4xl font-bold tracking-wide drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]"
           style={{ fontFamily: "'Caveat', cursive, sans-serif" }}
         >
-          Para ti{recipientName ? `, ${recipientName}` : ''}
+          Para ti{recipientName ? `, ${recipientName}` : ''} 💛
         </h1>
-        <p className="mt-2 text-sm sm:text-base text-amber-100/90 max-w-md leading-relaxed drop-shadow-md font-light">
-          Hoy no es ninguna fecha especial. No te pregunté si tenías una flor favorita, simplemente quise tener este detalle bonito contigo y regalarte estos girasoles bajo las estrellas. ✨
+        <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm md:text-base text-amber-100/95 max-w-md leading-relaxed drop-shadow-md font-light px-2">
+          Sé muy bien que ya pasaron las fechas de las flores amarillas... pero de todas formas no me iba a quedar con las ganas de darte las tuyas. Ningún día es tarde cuando el detalle viene del corazón. ✨🌻
         </p>
 
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5">

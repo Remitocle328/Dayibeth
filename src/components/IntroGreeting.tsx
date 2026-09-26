@@ -37,8 +37,13 @@ export const IntroGreeting: React.FC<IntroGreetingProps> = ({ onEnter }) => {
         </div>
 
         {/* Description */}
-        <div className="intro-description mb-8">
-          <span>ESTE DETALLE ES PARA TI :)</span>
+        <div className="intro-description mb-8 flex flex-col items-center gap-2 px-3 max-w-sm sm:max-w-md text-center">
+          <span className="text-amber-300/90 text-xs sm:text-sm font-medium tracking-wide uppercase leading-snug">
+            ¿Creíste que te ibas a quedar sin tus flores amarillas? 🌻
+          </span>
+          <span className="text-white/95 font-bold tracking-wider text-sm sm:text-base leading-snug">
+            ESTE DETALLE ES PARA TI :)
+          </span>
         </div>
 
         {/* Interactive Button */}
@@ -48,7 +53,7 @@ export const IntroGreeting: React.FC<IntroGreetingProps> = ({ onEnter }) => {
             id="intro-click-btn"
             className="intro-button-link cursor-pointer border-none outline-none"
           >
-            CLICK AQUÍ
+            CLICK AQUÍ 💛
           </button>
         </div>
       </div>

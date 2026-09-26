@@ -18,7 +18,7 @@ export const DEDICATED_PLAYLIST: DedicatedSong[] = [
     quote: '«Déjame cambiarte tu destino, que me sobran ganas de ser solo tuyo, mi reina...»',
     cover: 'https://images.unsplash.com/photo-1597848212624-a19eb35e2651?q=80&w=800&auto=format&fit=crop',
     src: '/solo-tuyo.mp3',
-    tag: '🌻 La principal',
+    tag: '🌻 Flores Amarillas',
   },
   {
     id: 'la-serenata',
