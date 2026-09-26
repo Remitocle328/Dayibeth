@@ -285,74 +285,72 @@ export default function App() {
           <div
             id="valentine-card"
             className={`card ${cardIsUp ? 'open' : ''}`}
-            style={{
-              top: cardIsUp ? '-140px' : '5px',
-              height: cardIsUp ? '228px' : '185px',
-            }}
           >
             <div className="card-inner">
-              {/* Header: recipient dedication */}
-              <div className="flex items-center justify-center gap-1 text-[11px] font-bold text-amber-900 tracking-wider uppercase pt-0.5">
-                <span className="text-xs">🌻</span>
-                <span>Para ti, {recipientName}</span>
-                <span className="text-xs">💛</span>
-              </div>
+              <div className="card-frame w-[260px]">
+                {/* Header: recipient dedication */}
+                <div className="flex items-center justify-center gap-1.5 text-[11px] font-bold text-amber-900 tracking-wider uppercase pt-0.5 shrink-0">
+                  <span className="text-xs">🌻</span>
+                  <span>Para ti, {recipientName}</span>
+                  <span className="text-xs">💛</span>
+                </div>
 
-              {/* Thoughtful Text: Flores amarillas acknowledging the date */}
-              <div
-                id="card-message"
-                className="text py-0.5 px-0.5 cursor-pointer w-full"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsCardModalOpen(true);
-                }}
-                title="Haz clic para leer en pantalla completa"
-              >
-                <p
-                  className="m-0 text-[#2b0e07] leading-tight font-bold"
-                  style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '15.5px' }}
-                >
-                  Sé que ya pasó la fecha de las flores amarillas...
-                </p>
-                <p
-                  className="m-0 text-[#5a2a18] leading-tight font-semibold mt-1"
-                  style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '14px' }}
-                >
-                  pero no quería quedarme sin darte este detalle.
-                </p>
-                <p
-                  className="m-0 text-[#b45309] leading-tight font-bold mt-1"
-                  style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '14px' }}
-                >
-                  Aquí tienes tus flores amarillas, con mucho cariño 🌻💛
-                </p>
-              </div>
-
-              {/* Action buttons inside the card */}
-              <div className="w-full flex items-center justify-center gap-2 pb-0.5">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowGarden(true);
-                  }}
-                  className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-[11px] font-bold shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer"
-                  title="Ver jardín floreciendo"
-                >
-                  <span>🌻</span>
-                  <span>Ver jardín</span>
-                </button>
-
-                <button
+                {/* Thoughtful Text: Flores amarillas acknowledging the date */}
+                <div
+                  id="card-message"
+                  className="text py-1 px-1 cursor-pointer w-full flex flex-col justify-center items-center select-none"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsCardModalOpen(true);
                   }}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/95 hover:bg-white text-rose-950 text-[11px] font-semibold border border-rose-200/80 shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer"
-                  title="Ampliar carta completa"
+                  title="Haz clic para leer en pantalla completa"
                 >
-                  <span>📜</span>
-                  <span>Ampliar</span>
-                </button>
+                  <p
+                    className="m-0 text-[#2b0e07] leading-snug font-bold"
+                    style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '15px' }}
+                  >
+                    Sé que ya pasaron las fechas de las flores amarillas...
+                  </p>
+                  <p
+                    className="m-0 text-[#5a2a18] leading-snug font-semibold mt-1"
+                    style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '13.5px' }}
+                  >
+                    pero ningún día es tarde para darte este lindo detalle.
+                  </p>
+                  <p
+                    className="m-0 text-[#b45309] leading-snug font-bold mt-1"
+                    style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '14px' }}
+                  >
+                    ¡Aquí tienes las tuyas con mucho cariño! 🌻💛
+                  </p>
+                </div>
+
+                {/* Action buttons inside the card with clean spacing */}
+                <div className="w-full flex items-center justify-center gap-2 pt-2 pb-0.5 shrink-0">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowGarden(true);
+                    }}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-[11px] font-bold shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                    title="Ver jardín floreciendo"
+                  >
+                    <span>🌻</span>
+                    <span>Ver jardín</span>
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsCardModalOpen(true);
+                    }}
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white/95 hover:bg-white text-rose-950 text-[11px] font-semibold border border-rose-200/80 shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                    title="Ampliar carta completa"
+                  >
+                    <span>📜</span>
+                    <span>Ampliar</span>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -378,7 +376,7 @@ export default function App() {
           onClick={() => setIsCardModalOpen(false)}
         >
           <div
-            className="relative w-full max-w-md bg-[#fdfbf7] rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-amber-300/80 flex flex-col items-center text-center animate-scale-up"
+            className="relative w-full max-w-md max-h-[90vh] overflow-y-auto bg-[#fdfbf7] rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-amber-300/80 flex flex-col items-center text-center animate-scale-up"
             onClick={(e) => e.stopPropagation()}
             style={{
               backgroundImage: 'radial-gradient(circle at top right, rgba(251, 191, 36, 0.12), transparent 70%)',
