@@ -111,7 +111,7 @@ export const SunflowerGarden: React.FC<SunflowerGardenProps> = ({ onBack, recipi
           Para ti{recipientName ? `, ${recipientName}` : ''}
         </h1>
         <p className="mt-2 text-sm sm:text-base text-amber-100/90 max-w-md leading-relaxed drop-shadow-md font-light">
-          Hoy no es San Valentín ni ninguna fecha especial. Me dijiste que no tenías flor favorita, así que quise regalarte y compartirte las mías: mis girasoles bajo las estrellas. ✨
+          Hoy no es ninguna fecha especial. No te pregunté si tenías una flor favorita, simplemente quise tener este detalle bonito contigo y regalarte estos girasoles bajo las estrellas. ✨
         </p>
 
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5">

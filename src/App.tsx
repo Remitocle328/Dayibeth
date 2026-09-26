@@ -287,10 +287,10 @@ export default function App() {
                 Hoy es un día común y corriente...
               </span>
               <span className="block text-[17px] text-[#5a2a18] mt-1 font-semibold leading-tight">
-                pero quería darte un detalle.
+                pero quería darte un detalle bonito.
               </span>
-              <span className="block text-[16px] text-[#9b2226] mt-1.5 font-bold leading-tight">
-                Como no tienes flor favorita, quise compartirte la mía: los girasoles 🌻
+              <span className="block text-[15px] sm:text-[16px] text-[#9b2226] mt-1.5 font-bold leading-tight">
+                No te pregunté si tenías flores favoritas, pero quise regalarte estos girasoles 🌻
               </span>
             </div>
 
@@ -336,7 +336,7 @@ export default function App() {
             <span className="text-base group-hover:rotate-45 transition-transform duration-500">
               🌻
             </span>
-            <span>Ver mis girasoles floreciendo para ti</span>
+            <span>Ver girasoles floreciendo para ti</span>
           </button>
 
           <button
