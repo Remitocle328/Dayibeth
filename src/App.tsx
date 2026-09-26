@@ -9,7 +9,7 @@ export default function App() {
   const [isHovered, setIsHovered] = useState(false);
   const [showGarden, setShowGarden] = useState(false);
   const [showMusicPlayer, setShowMusicPlayer] = useState(false);
-  const [recipientName, setRecipientName] = useState('Yucith');
+  const [recipientName, setRecipientName] = useState('Dayibeth');
   const [isEditingName, setIsEditingName] = useState(false);
 
   // Fallbacks in case external images fail to load

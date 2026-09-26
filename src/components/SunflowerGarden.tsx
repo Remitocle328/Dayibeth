@@ -7,7 +7,7 @@ interface SunflowerGardenProps {
   recipientName?: string;
 }
 
-export const SunflowerGarden: React.FC<SunflowerGardenProps> = ({ onBack, recipientName = 'Yucith' }) => {
+export const SunflowerGarden: React.FC<SunflowerGardenProps> = ({ onBack, recipientName = 'Dayibeth' }) => {
   const [loaded, setLoaded] = useState(false);
   const [stars, setStars] = useState<Array<{ id: number; top: number; duration: number }>>([]);
   const [showSongModal, setShowSongModal] = useState(false);
