@@ -1,12 +1,20 @@
 @import "tailwindcss";
 
+html,
 body {
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   user-select: none;
   font-family: 'Plus Jakarta Sans', sans-serif;
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a,
+[role="button"] {
+  touch-action: manipulation;
 }
 
 /* ===================================================
@@ -16,6 +24,28 @@ body {
   position: relative;
   width: 300px;
   height: 250px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+}
+
+@media screen and (max-width: 340px) {
+  .valentines-container {
+    transform: scale(0.92);
+    transform-origin: center center;
+  }
+}
+
+/* Extended hit-box so moving cursor upward to read the card or click its buttons
+   never triggers an accidental mouseLeave */
+.valentines-container::before {
+  content: "";
+  position: absolute;
+  top: -150px;
+  left: -20px;
+  right: -20px;
+  bottom: 0;
+  pointer-events: auto;
 }
 
 .valentines {
@@ -56,49 +86,61 @@ body {
   border-radius: 30px 0 0 0;
 }
 
+/* Card Slot: strictly bounds the card inside the envelope at the bottom (y = 185px)
+   giving 15px of safety clearance above the bottom of the envelope */
+.card-slot {
+  position: absolute;
+  top: -300px;
+  left: 0;
+  width: 300px;
+  height: 485px; /* -300px + 485px = 185px, safely 15px above envelope bottom (200px) */
+  overflow: hidden;
+  border-radius: 0 0 8px 8px;
+  pointer-events: none;
+  z-index: 5;
+}
+
 .card {
   position: absolute;
   background-color: #fdfbf7;
-  width: 276px;
-  height: 180px;
-  top: 10px;
-  left: 12px;
-  box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.22);
-  transition: top 0.6s cubic-bezier(0.34, 1.25, 0.64, 1), height 0.5s ease, box-shadow 0.3s ease;
-  z-index: 6;
+  width: 272px;
+  height: 172px;
+  top: 305px; /* In card-slot (top: -300px), 305px corresponds to 5px below envelope top */
+  left: 14px;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.18);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  transform: translateY(0);
   border-radius: 8px;
-  overflow: visible;
+  overflow: hidden;
+  pointer-events: auto;
 }
 
 .card.open {
-  top: -175px;
-  height: 290px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+  transform: translateY(-126px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
 }
 
-.card-frame {
-  position: relative;
+.card:before {
+  content: "";
+  position: absolute;
   border: 1.5px dashed #c49a6c;
-  border-radius: 7px;
-  margin: 6px;
-  padding: 8px 8px 10px 8px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.5);
-  z-index: 2;
+  inset: 6px;
+  pointer-events: none;
+  border-radius: 6px;
+  z-index: 1;
 }
 
 .card-inner {
   position: relative;
   width: 100%;
   height: 100%;
+  padding: 8px 10px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
+  text-align: center;
   z-index: 2;
 }
 
@@ -130,7 +172,6 @@ body {
   left: 0;
   width: 100%;
   pointer-events: none;
-  z-index: 15;
 }
 
 .Lazocoquette {

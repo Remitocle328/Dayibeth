@@ -10,7 +10,6 @@ export const SingleSongPlayer: React.FC<SingleSongPlayerProps> = ({ onClose, aut
   const [progressPercent, setProgressPercent] = useState(0);
   const [currentTimeStr, setCurrentTimeStr] = useState('0:00');
   const [durationStr, setDurationStr] = useState('0:00');
-  const [hasAudioError, setHasAudioError] = useState(false);
 
   // Song metadata
   const songTitle = 'Solo Tuyo';
@@ -19,7 +18,14 @@ export const SingleSongPlayer: React.FC<SingleSongPlayerProps> = ({ onClose, aut
   const songCover = 'https://images.unsplash.com/photo-1597848212624-a19eb35e2651?q=80&w=800&auto=format&fit=crop';
   
   // Audio sources: Checks public/solo-tuyo.mp3 first, or uploaded audio
-  const audioSrc = '/solo-tuyo.mp3';
+  const getAudioUrl = (filename: string) => {
+    const base = import.meta.env.BASE_URL || './';
+    const cleanBase = base.endsWith('/') ? base : `${base}/`;
+    const cleanFile = filename.replace(/^\/+/, '');
+    return `${cleanBase}${cleanFile}`;
+  };
+
+  const audioSrc = getAudioUrl('solo-tuyo.mp3');
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const progressTrackRef = useRef<HTMLDivElement | null>(null);
@@ -39,10 +45,9 @@ export const SingleSongPlayer: React.FC<SingleSongPlayerProps> = ({ onClose, aut
     } else {
       audioRef.current.play().then(() => {
         setIsPlaying(true);
-        setHasAudioError(false);
       }).catch((err) => {
-        console.warn('Audio playback error or file not yet loaded:', err);
-        setHasAudioError(true);
+        console.warn('Audio playback error:', err);
+        setIsPlaying(false);
       });
     }
   };
@@ -71,7 +76,6 @@ export const SingleSongPlayer: React.FC<SingleSongPlayerProps> = ({ onClose, aut
   const handleLoadedMetadata = () => {
     if (!audioRef.current) return;
     setDurationStr(formatTime(audioRef.current.duration || 0));
-    setHasAudioError(false);
   };
 
   const handleEnded = () => {
@@ -105,7 +109,6 @@ export const SingleSongPlayer: React.FC<SingleSongPlayerProps> = ({ onClose, aut
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={handleEnded}
-        onError={() => setHasAudioError(true)}
       />
 
       {/* Album Art with Sunflower Theme */}
@@ -218,13 +221,6 @@ export const SingleSongPlayer: React.FC<SingleSongPlayerProps> = ({ onClose, aut
             <span>{isPlaying ? '⏸' : '▶'}</span>
           </button>
         </div>
-
-        {/* Helpful hint when solo-tuyo.mp3 hasn't been uploaded yet */}
-        {hasAudioError && (
-          <div className="mt-1 p-2 rounded-xl bg-amber-100/70 border border-amber-300 text-[11px] text-amber-900 leading-tight text-center">
-            💡 Sube tu archivo a la carpeta <strong>public/</strong> con el nombre <strong>solo-tuyo.mp3</strong> para escucharlo directamente.
-          </div>
-        )}
       </div>
     </div>
   );

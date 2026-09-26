@@ -61,7 +61,7 @@ export const SunflowerGarden: React.FC<SunflowerGardenProps> = ({ onBack, recipi
   return (
     <div
       id="sunflower-garden-screen"
-      className={`fixed inset-0 w-full h-full overflow-hidden flex flex-col justify-between items-center transition-opacity duration-1000 ${
+      className={`fixed inset-0 w-full h-[100dvh] overflow-hidden flex flex-col justify-between items-center transition-opacity duration-1000 ${
         loaded ? 'opacity-100' : 'opacity-0 not-loaded'
       }`}
       style={{
@@ -99,7 +99,7 @@ export const SunflowerGarden: React.FC<SunflowerGardenProps> = ({ onBack, recipi
       {/* Sweet poetic message overlay at the top */}
       <div
         id="sunflower-dedication"
-        className="relative z-30 pt-6 sm:pt-10 px-4 sm:px-6 text-center max-w-xl mx-auto flex flex-col items-center animate-fade-in"
+        className="relative z-30 pt-4 sm:pt-10 px-3.5 sm:px-6 text-center max-w-xl mx-auto flex flex-col items-center animate-fade-in"
       >
         <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs sm:text-sm font-medium tracking-wide bg-amber-500/25 text-amber-200 border border-amber-400/40 backdrop-blur-md mb-2 sm:mb-3 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
           🌻 Tus Flores Amarillas
@@ -110,25 +110,25 @@ export const SunflowerGarden: React.FC<SunflowerGardenProps> = ({ onBack, recipi
         >
           Para ti{recipientName ? `, ${recipientName}` : ''} 💛
         </h1>
-        <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm md:text-base text-amber-100/95 max-w-md leading-relaxed drop-shadow-md font-light px-2">
+        <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-amber-100/95 max-w-md leading-relaxed drop-shadow-md font-light px-2">
           Sé muy bien que ya pasaron las fechas de las flores amarillas... pero de todas formas no me iba a quedar con las ganas de darte las tuyas. Ningún día es tarde cuando el detalle viene del corazón. ✨🌻
         </p>
 
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5">
+        <div className="mt-3 sm:mt-4 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
           <button
             onClick={handleOpenSongModal}
             id="garden-listen-song-btn"
-            className="px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-amber-500 hover:bg-amber-400 text-slate-900 shadow-[0_0_15px_rgba(245,158,11,0.5)] transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2"
+            className="px-4 py-2 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-amber-500 hover:bg-amber-400 text-slate-900 shadow-[0_0_15px_rgba(245,158,11,0.5)] transition-transform active:scale-95 flex items-center gap-2 min-h-[40px] touch-manipulation cursor-pointer"
           >
             <span>🎵</span>
-            <span>Escuchar canción que pensé para ti</span>
+            <span>Escuchar canción</span>
           </button>
 
           {onBack && (
             <button
               onClick={onBack}
               id="back-to-envelope-btn"
-              className="px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white/10 hover:bg-white/20 text-white/90 border border-white/20 backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2 shadow-lg"
+              className="px-4 py-2 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white/15 hover:bg-white/25 text-white/95 border border-white/20 backdrop-blur-md transition-transform active:scale-95 flex items-center gap-2 shadow-lg min-h-[40px] touch-manipulation cursor-pointer"
             >
               ← Volver a la cartita
             </button>
@@ -137,8 +137,10 @@ export const SunflowerGarden: React.FC<SunflowerGardenProps> = ({ onBack, recipi
 
         {/* Dedicated song popup player */}
         {showSongModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
-            <DedicatedMusicPlayer onClose={handleCloseSongModal} autoPlay={true} />
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-3 animate-fade-in">
+            <div className="w-full max-w-[340px]">
+              <DedicatedMusicPlayer onClose={handleCloseSongModal} autoPlay={true} />
+            </div>
           </div>
         )}
       </div>

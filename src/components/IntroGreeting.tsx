@@ -10,7 +10,7 @@ export const IntroGreeting: React.FC<IntroGreetingProps> = ({ onEnter }) => {
   return (
     <div
       id="intro-screen"
-      className="intro-container fixed inset-0 z-40 flex flex-col items-center justify-center text-center px-4 overflow-hidden"
+      className="intro-container fixed inset-0 z-40 flex flex-col items-center justify-center text-center px-4 overflow-hidden h-[100dvh]"
       style={{ backgroundColor: '#000000', color: '#f0fdfa' }}
     >
       {/* Background Sunflower Image with elegant dark overlay */}

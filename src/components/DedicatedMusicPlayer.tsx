@@ -10,6 +10,13 @@ export interface DedicatedSong {
   tag: string;
 }
 
+const getAudioUrl = (filename: string) => {
+  const base = import.meta.env.BASE_URL || './';
+  const cleanBase = base.endsWith('/') ? base : `${base}/`;
+  const cleanFile = filename.replace(/^\/+/, '');
+  return `${cleanBase}${cleanFile}`;
+};
+
 export const DEDICATED_PLAYLIST: DedicatedSong[] = [
   {
     id: 'solo-tuyo',
@@ -17,7 +24,7 @@ export const DEDICATED_PLAYLIST: DedicatedSong[] = [
     artist: 'Felipe Peláez',
     quote: '«Déjame cambiarte tu destino, que me sobran ganas de ser solo tuyo, mi reina...»',
     cover: 'https://images.unsplash.com/photo-1597848212624-a19eb35e2651?q=80&w=800&auto=format&fit=crop',
-    src: '/solo-tuyo.mp3',
+    src: getAudioUrl('solo-tuyo.mp3'),
     tag: '🌻 Flores Amarillas',
   },
   {
@@ -26,7 +33,7 @@ export const DEDICATED_PLAYLIST: DedicatedSong[] = [
     artist: 'Rafa Pérez',
     quote: '«Voy a gritar que me encantas... ¡porque me gustas tú, tú me gustas mujer!»',
     cover: 'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=800&auto=format&fit=crop',
-    src: '/la-serenata.mp3',
+    src: getAudioUrl('la-serenata.mp3'),
     tag: '🪗 Serenata',
   },
   {
@@ -35,7 +42,7 @@ export const DEDICATED_PLAYLIST: DedicatedSong[] = [
     artist: 'Churo Díaz & Elías Mendoza',
     quote: '«Tienes ese no sé qué que me enamora, esa miradita... Yo te quiero a ti, solamente a ti»',
     cover: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?q=80&w=800&auto=format&fit=crop',
-    src: '/el-jueguito.mp3',
+    src: getAudioUrl('el-jueguito.mp3'),
     tag: '💛 De verdad',
   },
   {
@@ -44,7 +51,7 @@ export const DEDICATED_PLAYLIST: DedicatedSong[] = [
     artist: 'Morat',
     quote: '«Yo solo quiero perderme en tu pelo y le agradezco al cielo que te conocí...»',
     cover: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=800&auto=format&fit=crop',
-    src: '/tu-tan-guapa.mp3',
+    src: getAudioUrl('tu-tan-guapa.mp3'),
     tag: '❤️ Para ti',
   },
 ];
@@ -64,7 +71,6 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
   const [currentTimeStr, setCurrentTimeStr] = useState('0:00');
   const [durationStr, setDurationStr] = useState('0:00');
   const [isListView, setIsListView] = useState(false);
-  const [hasAudioError, setHasAudioError] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const progressTrackRef = useRef<HTMLDivElement | null>(null);
@@ -88,11 +94,10 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
         .play()
         .then(() => {
           setIsPlaying(true);
-          setHasAudioError(false);
         })
         .catch((err) => {
           console.warn('Playback error:', err);
-          setHasAudioError(true);
+          setIsPlaying(false);
         });
     }
   };
@@ -137,7 +142,6 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
     if (audioRef.current) {
       audioRef.current.src = currentSong.src;
       audioRef.current.load();
-      setHasAudioError(false);
       if (isPlaying || autoPlay) {
         audioRef.current
           .play()
@@ -163,7 +167,6 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
   const handleLoadedMetadata = () => {
     if (!audioRef.current) return;
     setDurationStr(formatTime(audioRef.current.duration || 0));
-    setHasAudioError(false);
   };
 
   const handleEnded = () => {
@@ -184,10 +187,9 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
   return (
     <div
       id="dedicated-music-player"
-      className="flex flex-col bg-[#1c0e0c]/95 backdrop-blur-md text-amber-50 rounded-3xl shadow-[0_15px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-red-900/60 transition-all duration-300 select-none"
+      className="flex flex-col bg-[#1c0e0c]/95 backdrop-blur-md text-amber-50 rounded-3xl shadow-[0_15px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-red-900/60 transition-all duration-300 select-none w-full max-w-[330px] mx-auto"
       style={{
-        width: '320px',
-        fontFamily: "'Plus Jakarta Sans', sans-serif',",
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
       }}
     >
       <audio
@@ -196,7 +198,6 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={handleEnded}
-        onError={() => setHasAudioError(true)}
       />
 
       {/* Top Cover Slider with Dynamic Transition */}
@@ -219,7 +220,7 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
             <button
               onClick={() => setIsListView((prev) => !prev)}
               id="player-toggle-list-view"
-              className={`px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all backdrop-blur-sm flex items-center gap-1 ${
+              className={`px-3 py-1.5 rounded-full text-[11px] font-semibold transition-all backdrop-blur-sm flex items-center gap-1 min-h-[32px] active:scale-95 touch-manipulation ${
                 isListView
                   ? 'bg-amber-400 text-slate-900'
                   : 'bg-black/60 hover:bg-black/80 text-amber-100 border border-white/10'
@@ -234,8 +235,9 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
               <button
                 onClick={onClose}
                 id="close-dedicated-player-btn"
-                className="w-7 h-7 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center text-xs transition-colors backdrop-blur-sm border border-white/10"
+                className="w-8 h-8 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center text-xs transition-transform active:scale-95 touch-manipulation backdrop-blur-sm border border-white/10"
                 title="Cerrar"
+                aria-label="Cerrar reproductor"
               >
                 ✕
               </button>
@@ -248,7 +250,7 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
           <button
             onClick={togglePlay}
             id="center-play-button"
-            className="absolute inset-0 m-auto w-14 h-14 rounded-full bg-gradient-to-tr from-red-700 to-amber-500 hover:from-red-600 hover:to-amber-400 text-white flex items-center justify-center shadow-[0_0_25px_rgba(230,57,70,0.7)] transition-transform hover:scale-110 active:scale-95 z-20 border border-white/20"
+            className="absolute inset-0 m-auto w-14 h-14 rounded-full bg-gradient-to-tr from-red-700 to-amber-500 hover:from-red-600 hover:to-amber-400 text-white flex items-center justify-center shadow-[0_0_25px_rgba(230,57,70,0.7)] transition-transform hover:scale-110 active:scale-90 z-20 border border-white/20 touch-manipulation"
             title={isPlaying ? 'Pausa' : 'Reproducir'}
           >
             {isPlaying ? (
@@ -281,20 +283,20 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
 
       {/* Playlist List (Expandable) or Romantic Quote */}
       {isListView ? (
-        <div className="max-h-48 overflow-y-auto divide-y divide-red-900/30 bg-[#24120f]/90">
+        <div className="max-h-48 overflow-y-auto divide-y divide-red-900/30 bg-[#24120f]/90 overscroll-contain">
           {DEDICATED_PLAYLIST.map((song, i) => {
             const isActive = i === currentIdx;
             return (
               <div
                 key={song.id}
                 onClick={() => playSong(i)}
-                className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors ${
+                className={`flex items-center gap-3 px-3 py-3 cursor-pointer transition-colors active:bg-red-900/50 touch-manipulation ${
                   isActive
                     ? 'bg-red-950/70 text-amber-200 font-bold border-l-2 border-amber-400'
                     : 'hover:bg-red-950/30 text-amber-100/70'
                 }`}
               >
-                <div className="relative w-8 h-8 rounded-lg overflow-hidden flex-shrink-0 shadow-sm border border-white/10">
+                <div className="relative w-9 h-9 rounded-lg overflow-hidden flex-shrink-0 shadow-sm border border-white/10">
                   <img src={song.cover} alt={song.title} className="w-full h-full object-cover" />
                   {isActive && isPlaying && (
                     <div className="absolute inset-0 bg-red-700/60 flex items-center justify-center text-white text-[10px]">
@@ -328,7 +330,7 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
 
       {/* Audio Controls & Progress */}
       <div className="p-3.5 flex flex-col gap-2 bg-[#1c0e0c]">
-        {/* Progress scrub bar */}
+        {/* Progress scrub bar with generous touch hit-box */}
         <div className="flex items-center gap-2">
           <span className="text-[11px] text-amber-200/50 font-semibold w-7 text-right">
             {currentTimeStr}
@@ -336,13 +338,15 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
           <div
             ref={progressTrackRef}
             onPointerDown={handleScrub}
-            className="relative flex-1 h-2 bg-black/50 hover:bg-black/70 rounded-full cursor-pointer transition-colors border border-red-900/30"
+            className="relative flex-1 py-2 cursor-pointer touch-manipulation"
           >
-            <div
-              className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-red-600 to-amber-500 rounded-full"
-              style={{ width: `${progressPercent}%` }}
-            >
-              <span className="absolute right-0 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-amber-200 shadow border border-red-800" />
+            <div className="w-full h-2 bg-black/50 hover:bg-black/70 rounded-full transition-colors border border-red-900/30 relative">
+              <div
+                className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-red-600 to-amber-500 rounded-full"
+                style={{ width: `${progressPercent}%` }}
+              >
+                <span className="absolute right-0 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-amber-200 shadow border border-red-800" />
+              </div>
             </div>
           </div>
           <span className="text-[11px] text-amber-200/50 font-semibold w-7">
@@ -356,10 +360,11 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
           <button
             onClick={handleBack}
             id="dedicated-btn-back"
-            className="w-8 h-8 rounded-full hover:bg-white/10 text-amber-200 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+            className="w-10 h-10 rounded-full hover:bg-white/10 active:bg-white/20 text-amber-200 flex items-center justify-center transition-transform active:scale-90 touch-manipulation"
             title="Canción anterior"
+            aria-label="Canción anterior"
           >
-            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
               <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
             </svg>
           </button>
@@ -368,7 +373,7 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
           <button
             onClick={togglePlay}
             id="dedicated-bottom-toggle"
-            className="px-5 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white flex items-center gap-2 shadow-md transition-all hover:scale-105 active:scale-95 border border-red-400/30"
+            className="px-6 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white flex items-center gap-2 shadow-md transition-transform active:scale-95 border border-red-400/30 min-h-[38px] touch-manipulation"
           >
             <span>{isPlaying ? 'Pausa' : 'Reproducir'}</span>
             <span>{isPlaying ? '⏸' : '▶'}</span>
@@ -378,22 +383,15 @@ export const DedicatedMusicPlayer: React.FC<DedicatedMusicPlayerProps> = ({
           <button
             onClick={handleNext}
             id="dedicated-btn-next"
-            className="w-8 h-8 rounded-full hover:bg-white/10 text-amber-200 flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+            className="w-10 h-10 rounded-full hover:bg-white/10 active:bg-white/20 text-amber-200 flex items-center justify-center transition-transform active:scale-90 touch-manipulation"
             title="Siguiente canción"
+            aria-label="Siguiente canción"
           >
-            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
               <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
             </svg>
           </button>
         </div>
-
-        {/* Audio helper notice if file not yet uploaded */}
-        {hasAudioError && (
-          <div className="mt-1 p-2 rounded-xl bg-red-950/70 border border-red-700/50 text-[11px] text-red-200 leading-tight text-center">
-            💡 Sube el archivo a <strong>public/</strong> como{' '}
-            <strong>{currentSong.src.replace('/', '')}</strong> para que suene de inmediato.
-          </div>
-        )}
       </div>
     </div>
   );

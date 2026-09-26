@@ -125,10 +125,22 @@ export default function App() {
     setIsOpen((prev) => !prev);
   };
 
+  const handleMouseEnter = () => {
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(hover: hover)').matches) {
+      setIsHovered(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(hover: hover)').matches) {
+      setIsHovered(false);
+    }
+  };
+
   return (
     <div
       id="main-app-wrapper"
-      className="relative min-h-screen w-full flex flex-col items-center justify-center select-none overflow-hidden"
+      className="relative min-h-[100dvh] w-full flex flex-col items-center justify-between py-5 sm:py-6 px-3 sm:px-4 select-none overflow-hidden"
       style={{
         backgroundColor: '#fae1dd',
       }}
@@ -154,17 +166,17 @@ export default function App() {
       </div>
 
       {/* Top Header / Subtle Context */}
-      <header className="absolute top-6 left-0 right-0 text-center px-4 z-10 flex justify-between items-center max-w-2xl mx-auto w-full">
+      <header className="relative w-full max-w-xl mx-auto flex justify-between items-center z-10 pt-1 sm:pt-2">
         <button
           onClick={handleReturnToCover}
-          className="text-xs font-semibold text-rose-950/80 hover:text-rose-950 transition-colors px-3 py-1.5 rounded-full bg-white/70 hover:bg-white/90 backdrop-blur-md border border-rose-200 shadow-sm active:scale-95"
+          className="text-xs font-semibold text-rose-950/80 hover:text-rose-950 transition-colors px-3 py-1.5 rounded-full bg-white/70 hover:bg-white/90 backdrop-blur-md border border-rose-200 shadow-sm active:scale-95 touch-manipulation min-h-[34px] flex items-center gap-1"
           title="Volver a la portada de inicio"
         >
           ← Portada
         </button>
 
-        <div className="inline-flex items-center gap-2 bg-white/80 hover:bg-white/95 transition-all border border-amber-200 px-4 py-1.5 rounded-full shadow-sm backdrop-blur-md">
-          <span className="text-amber-500 text-sm">🌻</span>
+        <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-white/80 hover:bg-white/95 transition-all border border-amber-200 px-3 sm:px-4 py-1.5 rounded-full shadow-sm backdrop-blur-md">
+          <span className="text-amber-500 text-xs sm:text-sm">🌻</span>
           {isEditingName ? (
             <input
               type="text"
@@ -180,14 +192,14 @@ export default function App() {
           ) : (
             <span
               onClick={() => setIsEditingName(true)}
-              className="text-xs font-semibold text-amber-950 cursor-pointer hover:underline"
+              className="text-xs font-semibold text-amber-950 cursor-pointer hover:underline touch-manipulation"
               title="Haz clic para cambiar el nombre"
             >
               Para: {recipientName} ✎
             </span>
           )}
-          <span className="text-[11px] text-amber-900/80 font-medium border-l border-amber-200 pl-2">
-            Tus flores amarillas ✨
+          <span className="text-[10px] sm:text-[11px] text-amber-900/80 font-medium border-l border-amber-200 pl-1.5 sm:pl-2">
+            Tus flores ✨
           </span>
         </div>
 
@@ -199,7 +211,7 @@ export default function App() {
       {showMusicPlayer && (
         <div
           id="music-player-modal-container"
-          className="fixed bottom-6 right-6 z-50 animate-fade-in filter drop-shadow-2xl"
+          className="fixed inset-x-3 bottom-4 sm:inset-x-auto sm:bottom-6 sm:right-6 z-50 flex justify-center animate-fade-in filter drop-shadow-2xl"
         >
           <DedicatedMusicPlayer onClose={handleToggleMusic} autoPlay={true} />
         </div>
@@ -208,9 +220,9 @@ export default function App() {
       {/* Interactive Envelope Container */}
       <div
         id="valentines-container"
-        className="container valentines-container mt-24 sm:mt-28 mb-0"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        className="valentines-container relative my-auto py-2"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         onClick={toggleCard}
         role="button"
         tabIndex={0}
@@ -279,17 +291,17 @@ export default function App() {
         {/* Envelope Structure */}
         <div id="valentines-envelope" className="valentines">
           <div id="envelope-back" className="envelope"></div>
-          <div id="envelope-front" className="front"></div>
 
-          {/* Sliding Card */}
-          <div
-            id="valentine-card"
-            className={`card ${cardIsUp ? 'open' : ''}`}
-          >
-            <div className="card-inner">
-              <div className="card-frame w-[260px]">
+          {/* Card Slot: strictly bounds the card within the envelope bottom so it can never overflow below */}
+          <div className="card-slot">
+            {/* Sliding Card */}
+            <div
+              id="valentine-card"
+              className={`card ${cardIsUp ? 'open' : ''}`}
+            >
+              <div className="card-inner">
                 {/* Header: recipient dedication */}
-                <div className="flex items-center justify-center gap-1.5 text-[11px] font-bold text-amber-900 tracking-wider uppercase pt-0.5 shrink-0">
+                <div className="flex items-center justify-center gap-1 text-[11px] font-bold text-amber-900 tracking-wider uppercase pt-0.5">
                   <span className="text-xs">🌻</span>
                   <span>Para ti, {recipientName}</span>
                   <span className="text-xs">💛</span>
@@ -298,7 +310,7 @@ export default function App() {
                 {/* Thoughtful Text: Flores amarillas acknowledging the date */}
                 <div
                   id="card-message"
-                  className="text py-1 px-1 cursor-pointer w-full flex flex-col justify-center items-center select-none"
+                  className="text py-0.5 px-0.5 cursor-pointer w-full"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsCardModalOpen(true);
@@ -306,33 +318,33 @@ export default function App() {
                   title="Haz clic para leer en pantalla completa"
                 >
                   <p
-                    className="m-0 text-[#2b0e07] leading-snug font-bold"
+                    className="m-0 text-[#2b0e07] leading-tight font-bold"
                     style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '15px' }}
                   >
-                    Sé que ya pasaron las fechas de las flores amarillas...
+                    Sé que ya pasó la fecha de las flores amarillas...
                   </p>
                   <p
-                    className="m-0 text-[#5a2a18] leading-snug font-semibold mt-1"
+                    className="m-0 text-[#5a2a18] leading-tight font-semibold mt-0.5"
                     style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '13.5px' }}
                   >
-                    pero ningún día es tarde para darte este lindo detalle.
+                    pero no quería quedarme sin darte este detalle.
                   </p>
                   <p
-                    className="m-0 text-[#b45309] leading-snug font-bold mt-1"
-                    style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '14px' }}
+                    className="m-0 text-[#b45309] leading-tight font-bold mt-0.5"
+                    style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '13.5px' }}
                   >
-                    ¡Aquí tienes las tuyas con mucho cariño! 🌻💛
+                    Aquí tienes tus flores amarillas, con mucho cariño 🌻💛
                   </p>
                 </div>
 
-                {/* Action buttons inside the card with clean spacing */}
-                <div className="w-full flex items-center justify-center gap-2 pt-2 pb-0.5 shrink-0">
+                {/* Action buttons inside the card */}
+                <div className="w-full flex items-center justify-center gap-2 pb-0.5">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       setShowGarden(true);
                     }}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-[11px] font-bold shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 text-xs font-bold shadow-xs transition-transform cursor-pointer min-h-[30px] touch-manipulation"
                     title="Ver jardín floreciendo"
                   >
                     <span>🌻</span>
@@ -344,7 +356,7 @@ export default function App() {
                       e.stopPropagation();
                       setIsCardModalOpen(true);
                     }}
-                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white/95 hover:bg-white text-rose-950 text-[11px] font-semibold border border-rose-200/80 shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-white/95 hover:bg-white active:scale-95 text-rose-950 text-xs font-semibold border border-rose-200/80 shadow-xs transition-transform cursor-pointer min-h-[30px] touch-manipulation"
                     title="Ampliar carta completa"
                   >
                     <span>📜</span>
@@ -352,17 +364,19 @@ export default function App() {
                   </button>
                 </div>
               </div>
-            </div>
 
-            {/* Floating Red/Crimson Hearts */}
-            <div id="floating-hearts-cluster" className="hearts">
-              <div className="one"></div>
-              <div className="two"></div>
-              <div className="three"></div>
-              <div className="four"></div>
-              <div className="five"></div>
+              {/* Floating Red/Crimson Hearts */}
+              <div id="floating-hearts-cluster" className="hearts">
+                <div className="one"></div>
+                <div className="two"></div>
+                <div className="three"></div>
+                <div className="four"></div>
+                <div className="five"></div>
+              </div>
             </div>
           </div>
+
+          <div id="envelope-front" className="front"></div>
         </div>
 
         {/* Shadow */}
@@ -376,16 +390,16 @@ export default function App() {
           onClick={() => setIsCardModalOpen(false)}
         >
           <div
-            className="relative w-full max-w-md max-h-[90vh] overflow-y-auto bg-[#fdfbf7] rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-amber-300/80 flex flex-col items-center text-center animate-scale-up"
+            className="relative w-full max-w-md max-h-[92vh] overflow-y-auto bg-[#fdfbf7] rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-amber-300/80 flex flex-col items-center text-center animate-scale-up"
             onClick={(e) => e.stopPropagation()}
             style={{
               backgroundImage: 'radial-gradient(circle at top right, rgba(251, 191, 36, 0.12), transparent 70%)',
             }}
           >
-            {/* Close button */}
+            {/* Close button with comfortable touch target */}
             <button
               onClick={() => setIsCardModalOpen(false)}
-              className="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-950 flex items-center justify-center text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-sm"
+              className="absolute top-3.5 right-3.5 w-9 h-9 rounded-full bg-amber-100 hover:bg-amber-200 active:scale-95 text-amber-950 flex items-center justify-center text-sm font-bold transition-transform shadow-sm touch-manipulation"
               aria-label="Cerrar cartita"
             >
               ✕
@@ -408,8 +422,8 @@ export default function App() {
 
             {/* Letter Content */}
             <div
-              className="space-y-3.5 text-stone-800 leading-relaxed max-w-sm px-2"
-              style={{ fontFamily: "'Caveat', cursive, sans-serif", fontSize: '22px' }}
+              className="space-y-3.5 text-stone-800 leading-relaxed max-w-sm px-2 text-xl sm:text-2xl"
+              style={{ fontFamily: "'Caveat', cursive, sans-serif" }}
             >
               <p className="font-bold text-[#2b0e07]">
                 Sé que ya pasó la fecha tradicional de las flores amarillas...
@@ -429,7 +443,7 @@ export default function App() {
                   setIsCardModalOpen(false);
                   setShowGarden(true);
                 }}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-sm font-bold shadow-md hover:scale-105 active:scale-95 transition-all"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 active:scale-95 text-slate-950 text-sm font-bold shadow-md transition-transform min-h-[44px] touch-manipulation"
               >
                 <span>🌻</span>
                 <span>Ver flores floreciendo</span>
@@ -440,7 +454,7 @@ export default function App() {
                   setIsCardModalOpen(false);
                   handleToggleMusic();
                 }}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-stone-50 border border-stone-200 text-stone-800 text-sm font-semibold shadow-xs hover:scale-105 active:scale-95 transition-all"
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-white hover:bg-stone-50 active:scale-95 border border-stone-200 text-stone-800 text-sm font-semibold shadow-xs transition-transform min-h-[44px] touch-manipulation"
               >
                 <span>🎵</span>
                 <span>{showMusicPlayer ? 'Ocultar música' : 'Poner música'}</span>
@@ -451,12 +465,12 @@ export default function App() {
       )}
 
       {/* Action Buttons Below the Envelope */}
-      <div className="mt-3 sm:mt-4 mb-6 flex flex-col items-center gap-2.5 z-10 px-4 text-center">
-        <div className="flex flex-wrap items-center justify-center gap-3">
+      <div className="mt-1 sm:mt-3 mb-2 sm:mb-4 flex flex-col items-center gap-2 z-10 px-3 text-center">
+        <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
           <button
             onClick={handleOpenGarden}
             id="see-sunflowers-btn"
-            className="group relative inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-gradient-to-r from-[#b45309] via-[#92400e] to-[#78350f] hover:from-[#d97706] hover:to-[#92400e] text-amber-50 text-sm font-semibold tracking-wide shadow-[0_4px_20px_rgba(180,83,9,0.45)] hover:shadow-[0_6px_25px_rgba(217,119,6,0.6)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 border border-amber-400/30"
+            className="group relative inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-[#b45309] via-[#92400e] to-[#78350f] hover:from-[#d97706] hover:to-[#92400e] active:scale-95 text-amber-50 text-xs sm:text-sm font-semibold tracking-wide shadow-[0_4px_20px_rgba(180,83,9,0.45)] transition-transform border border-amber-400/30 min-h-[44px] touch-manipulation cursor-pointer"
           >
             <span className="text-base group-hover:rotate-45 transition-transform duration-500">
               🌻
@@ -467,7 +481,7 @@ export default function App() {
           <button
             onClick={handleToggleMusic}
             id="see-music-btn"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/80 hover:bg-white text-rose-950 text-sm font-semibold tracking-wide border border-rose-200 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-md"
+            className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-white/85 hover:bg-white active:scale-95 text-rose-950 text-xs sm:text-sm font-semibold tracking-wide border border-rose-200 shadow-md transition-transform backdrop-blur-md min-h-[44px] touch-manipulation cursor-pointer"
           >
             <span>🎵</span>
             <span>{showMusicPlayer ? 'Ocultar música' : 'Poner música'}</span>
@@ -476,12 +490,12 @@ export default function App() {
 
         <p
           id="interaction-hint"
-          className="text-xs tracking-wider text-rose-900/80 font-medium cursor-pointer hover:text-rose-950 transition-colors"
+          className="text-xs tracking-wider text-rose-900/85 font-medium cursor-pointer hover:text-rose-950 transition-colors py-1 touch-manipulation"
           onClick={toggleCard}
         >
           {cardIsUp
-            ? '♡ Haz clic en la carta para ampliarla o guardarla ♡'
-            : '♡ Pasa el cursor o toca el sobre para abrir la cartita ♡'}
+            ? '♡ Toca la cartita para leerla completa o guardarla ♡'
+            : '♡ Toca el sobre para abrir tu cartita 🌻 ♡'}
         </p>
       </div>
     </div>
